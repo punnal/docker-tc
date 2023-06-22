@@ -53,6 +53,7 @@ while read DOCKER_EVENT; do
             CORRUPT=$(docker_container_labels_get "$BASE_LABEL.corrupt")
             DUPLICATION=$(docker_container_labels_get "$BASE_LABEL.duplicate")
             REORDERING=$(docker_container_labels_get "$BASE_LABEL.reorder")
+            IPSHAPING=$(docker_container_labels_get "$BASE_LABEL.ipshaping")
             tc_init
             qdisc_del "$NETWORK_INTERFACE_NAME" &>/dev/null || true
             OPTIONS_LOG=
@@ -74,6 +75,10 @@ while read DOCKER_EVENT; do
             if [ ! -z "$LIMIT" ]; then
                 log "Set bandwidth-limit=$LIMIT on $NETWORK_INTERFACE_NAME"
                 qdisc_tbf "$NETWORK_INTERFACE_NAME" rate "$LIMIT"
+            fi
+            if [ ! -z "$IPSHAPING" ]; then
+                log "Set these shaping rules to these IPs=$IPSHAPING on $NETWORK_INTERFACE_NAME"
+                qdisc_netm_filter_ip "$NETWORK_INTERFACE_NAME" $IPSHAPING
             fi
             lock "$CONTAINER_ID"
             log "Controlling traffic of the container $(docker_container_get_name "$CONTAINER_ID") on $NETWORK_INTERFACE_NAME"
