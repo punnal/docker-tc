@@ -9,6 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./bin:/docker-tc/bin
+      - /proc:/proc
     deploy:
       mode: global
       restart_policy:

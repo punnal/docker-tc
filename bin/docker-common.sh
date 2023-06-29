@@ -21,7 +21,9 @@ docker_container_get_name() {
     docker inspect --format '{{ .Name }}' "$1"
 }
 docker_container_get_interfaces() {
-    IFLINKS=$(docker exec $1 sh -c 'cat /sys/class/net/*/iflink')
+    #IFLINKS=$(docker exec $1 sh -c 'cat /sys/class/net/*/iflink')
+    container_pid=$(docker inspect -f '{{.State.Pid}}' $1)
+    IFLINKS=$(sh -c "cat /proc/$container_pid/root/sys/class/net/*/iflink")
     if [ -z "$IFLINKS" ]; then
         return 1
     fi
