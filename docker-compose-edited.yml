@@ -18,6 +18,7 @@ services:
       HTTP_BIND: "${HTTP_BIND:-127.0.0.1}"
       HTTP_PORT: "${HTTP_PORT:-4080}"
     network_mode: host
+    privileged: true
 
 networks:
   default:
