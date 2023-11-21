@@ -3,6 +3,7 @@
 . /docker-tc/bin/docker-common.sh
 . /docker-tc/bin/tc-common.sh
 set -e
+sleep 3
 log() {
     echo "[$(date -Is)] [$CONTAINER_ID] $*"
 }
@@ -88,4 +89,3 @@ done < <(
     docker ps -q;
     docker events --filter event=start
 )
-sleep 5
