@@ -88,3 +88,4 @@ done < <(
     docker ps -q;
     docker events --filter event=start
 )
+sleep 5
