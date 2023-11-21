@@ -58,6 +58,7 @@ docker_container_interfaces_in_network() {
             fi
         done < <(echo -e "$CONTAINER_INTERFACES")
     done < <(echo -e "$NETWORK_INTERFACES")
+    echo "$COMMON_INTERFACES"
     echo "${COMMON_INTERFACES::-2}"
 }
 CONTAINER_LABELS=
