@@ -60,17 +60,22 @@ qdisc_filter_flow() {
                 netem_details=$(echo "loss 0%")
             fi
             echo "Delay/Loss details: $netem_details"
+            echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
+            
 
             SUBQDISC_HANDLE2="parent $(($QDISC_ID)) handle $(($QDISC_ID+1)):"
             ((QDISC_ID++))
+            echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE2 tbf burst 5kb latency 50ms $tbf_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE2 tbf burst 5kb latency 50ms $tbf_details
         else
             netem_details="$details"
             echo "Delay/Loss details: $netem_details"
+            echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
+            
         fi
-        echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
+        #echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
         #tc filter add dev "$IF" protocol ip parent $QDISC_ID:0 prio 1 u32 match ip src $ip flowid $QDISC_ID:$ID
         IFS="-" read -r srcIP dstIP srcport dstport protocol <<< "$flow"
 
