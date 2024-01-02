@@ -57,6 +57,9 @@ qdisc_filter_flow() {
         if [[ "$tbf_details" != "none" ]]; then
             netem_details=$(echo "$details" | sed "s/$tbf_details//")
             echo "Delay/Loss details: $netem_details"
+            if [[ "$netem_details" == "" ]]; then
+                $netem_details="loss 0%"
+            fi
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
 
             SUBQDISC_HANDLE2="parent $(($QDISC_ID)) handle $(($QDISC_ID+1)):"
