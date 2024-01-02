@@ -49,7 +49,7 @@ qdisc_filter_flow() {
         details=$(echo "$address" | awk -F':' '{print $2}')
         #echo "IP: $ip"
         #echo "Details: $details"
-        tbf_details="$(echo "$details" | grep -oP 'limit\s+\S+' || echo 'none')"
+        tbf_details="$(echo "$details" | grep -oP 'rate\s+\S+' || echo 'none')"
         SUBQDISC_HANDLE="parent $PARENT_ID:$ID handle $(($QDISC_ID+1)):"
         filter_flow_id="$PARENT_ID:$ID"
         ((QDISC_ID++))
