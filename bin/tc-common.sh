@@ -64,7 +64,7 @@ qdisc_filter_flow() {
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
             
 
-            SUBQDISC_HANDLE2="parent $(($QDISC_ID)) handle $(($QDISC_ID+1)):"
+            SUBQDISC_HANDLE2="parent $(($QDISC_ID)): handle $(($QDISC_ID+1)):"
             ((QDISC_ID++))
             echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE2 tbf burst 5kb latency 50ms $tbf_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE2 tbf burst 5kb latency 50ms $tbf_details
