@@ -47,14 +47,16 @@ qdisc_filter_flow() {
     for address in "${addresses[@]}"; do
         flow=$(echo "$address" | awk -F':' '{print $1}')
         details=$(echo "$address" | awk -F':' '{print $2}')
-        #echo "IP: $ip"
-        #echo "Details: $details"
+        echo "Flow: $flow"
+        echo "Details: $details"
         tbf_details="$(echo "$details" | grep -oP 'rate\s+\S+' || echo 'none')"
+        echo "Rate details: $tbf_details"
         SUBQDISC_HANDLE="parent $PARENT_ID:$ID handle $(($QDISC_ID+1)):"
         filter_flow_id="$PARENT_ID:$ID"
         ((QDISC_ID++))
         if [[ "$tbf_details" != "none" ]]; then
             netem_details=$(echo "$details" | sed "s/$tbf_details//")
+            echo "Delay/Loss details: $netem_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
 
             SUBQDISC_HANDLE2="parent $(($QDISC_ID)) handle $(($QDISC_ID+1)):"
@@ -62,6 +64,7 @@ qdisc_filter_flow() {
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE2 tbf burst 5kb latency 50ms $tbf_details
         else
             netem_details="$details"
+            echo "Delay/Loss details: $netem_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
         fi
         echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
