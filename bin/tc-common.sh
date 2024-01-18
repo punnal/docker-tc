@@ -57,6 +57,7 @@ qdisc_filter_flow() {
         filter_flow_id="$PARENT_ID:$ID"
         ((QDISC_ID++))
         tc class add dev "$IF" parent $PARENT_ID: classid "$PARENT_ID:$ID" htb rate 10gbit
+        echo "tc class add dev "$IF" parent $PARENT_ID: classid "$PARENT_ID:$ID" htb rate 10gbit"
         if [[ "$tbf_details" != "none" ]]; then
             netem_details=$(echo "$details" | sed "s/$tbf_details//")
             if [[ "$netem_details" == "" ]]; then
