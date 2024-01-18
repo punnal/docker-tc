@@ -30,8 +30,10 @@ qdisc_tbf() {
 qdisc_filter_flow() {
     IF="$1"
     shift
-    tc qdisc add dev "$IF" $QDISC_HANDLE prio
-    echo "tc qdisc add dev "$IF" $QDISC_HANDLE prio"
+    #tc qdisc add dev "$IF" $QDISC_HANDLE prio
+    #echo "tc qdisc add dev "$IF" $QDISC_HANDLE prio"
+    tc qdisc add dev "$IF" $QDISC_HANDLE htb
+    echo "tc qdisc add dev "$IF" $QDISC_HANDLE htb"
     filter_parent_id=$QDISC_ID
     ID=1
     PARENT_ID="$QDISC_ID"
@@ -54,6 +56,7 @@ qdisc_filter_flow() {
         SUBQDISC_HANDLE="parent $PARENT_ID:$ID handle $(($QDISC_ID+1)):"
         filter_flow_id="$PARENT_ID:$ID"
         ((QDISC_ID++))
+        tc class add dev "$IF" parent $PARENT_ID: classid "$PARENT_ID:$ID" htb rate 10gbit
         if [[ "$tbf_details" != "none" ]]; then
             netem_details=$(echo "$details" | sed "s/$tbf_details//")
             if [[ "$netem_details" == "" ]]; then
