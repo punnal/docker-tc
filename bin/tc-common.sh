@@ -60,9 +60,9 @@ qdisc_filter_flow() {
         echo "tc class add dev "$IF" parent $PARENT_ID: classid "$PARENT_ID:$ID" htb rate 10gbit"
         if [[ "$tbf_details" != "none" ]]; then
             netem_details=$(echo "$details" | sed "s/$tbf_details//")
-            if [[ "$netem_details" == "" ]]; then
-                netem_details=$(echo "loss 0%")
-            fi
+            #if [[ "$netem_details" == "" ]]; then
+            #    netem_details=$(echo "loss 0%")
+            #fi
             echo "Delay/Loss details: $netem_details"
             echo "tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details"
             tc qdisc add dev "$IF" $SUBQDISC_HANDLE netem $netem_details
